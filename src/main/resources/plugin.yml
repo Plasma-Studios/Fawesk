@@ -1,8 +1,8 @@
 name: Fawesk
 authors: [ LimeGlass ]
-version: @version@
+version: $version
 api-version: 1.17
 depend: [ FastAsyncWorldEdit, Skript ]
 main: me.limeglass.fawesk.Fawesk
 libraries:
-    - "org.jetbrains.kotlin:kotlin-stdlib:@kotlin_version@"
+    - "$kotlin"

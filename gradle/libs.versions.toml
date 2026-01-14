@@ -1,0 +1,17 @@
+[versions]
+spigot = "1.21.11-R0.1-SNAPSHOT"
+kotlin = "2.2.21"
+
+skript = "2.14.0-pre2"
+worldedit = "7.4.0-SNAPSHOT"
+fawe = "1.55"
+
+[libraries]
+spigot-api = { module = "org.spigotmc:spigot-api", version.ref = "spigot" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+worldedit-api = { module = "com.sk89q.worldedit:worldedit-bukkit", version.ref = "worldedit" }
+skript = { module = "com.github.SkriptLang:Skript", version.ref = "skript" }
+
+fawe-bom = { module = "com.intellectualsites.bom:bom-newest", version.ref = "fawe" }
+fawe-core = { module = "com.fastasyncworldedit:FastAsyncWorldEdit-Core" }
+fawe-bukkit = { module = "com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit" }
