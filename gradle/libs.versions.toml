@@ -6,6 +6,8 @@ skript = "2.14.0-pre2"
 worldedit = "7.4.0-SNAPSHOT"
 fawe = "1.55"
 
+run-task = "3.0.2"
+
 [libraries]
 spigot-api = { module = "org.spigotmc:spigot-api", version.ref = "spigot" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -15,3 +17,6 @@ skript = { module = "com.github.SkriptLang:Skript", version.ref = "skript" }
 fawe-bom = { module = "com.intellectualsites.bom:bom-newest", version.ref = "fawe" }
 fawe-core = { module = "com.fastasyncworldedit:FastAsyncWorldEdit-Core" }
 fawe-bukkit = { module = "com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit" }
+
+[plugins]
+run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-task" }

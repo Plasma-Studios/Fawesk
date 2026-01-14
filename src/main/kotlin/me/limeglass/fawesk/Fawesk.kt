@@ -9,10 +9,10 @@ import org.skriptlang.skript.addon.SkriptAddon
 class Fawesk : JavaPlugin() {
 
 	override fun onEnable() {
+		DefaultClasses.register()
 		val addon = Skript.instance().registerAddon(this.javaClass, "Fawesk")
 		addon.loadModules(Fawesk);
 		addon.localizer().setSourceDirectories("lang", this.dataFolder.resolve("lang").canonicalPath)
-		DefaultClasses.register()
 	}
 
 	internal companion object : AddonModule {
