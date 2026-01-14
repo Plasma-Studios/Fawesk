@@ -1,10 +1,8 @@
 package me.limeglass.fawesk.elements
 
-import ch.njol.skript.Skript
 import ch.njol.skript.expressions.ExprInput
 import ch.njol.skript.lang.Condition
 import ch.njol.skript.lang.Expression
-import ch.njol.skript.lang.ExpressionType
 import ch.njol.skript.lang.InputSource
 import ch.njol.skript.lang.InputSource.InputData
 import ch.njol.skript.lang.SkriptParser.ParseResult
@@ -16,20 +14,31 @@ import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.regions.CuboidRegion
 import org.bukkit.Location
 import org.bukkit.event.Event
+import org.skriptlang.skript.registration.DefaultSyntaxInfos
+import org.skriptlang.skript.registration.SyntaxRegistry
 import java.util.concurrent.CompletableFuture
 
 class ExprLocations : SimpleExpression<Location>(), InputSource {
 
 	companion object {
-		init {
-			Skript.registerExpression(ExprLocations::class.java, Location::class.java, ExpressionType.SIMPLE,
-				"(worldedit|fawe) locations (within|from) %location% (to|and) %location%",
-				"(worldedit|fawe) locations (within|from) %location% (to|and) %location% (where|that match) \\[<.+>\\]",
-				"[surface:surface [tolerance %number%] of] (worldedit|fawe) locations in radius %number% around %location%",
-				"[surface:surface [tolerance %number%] of] (worldedit|fawe) locations in radius %number% around %location% (where|that match) \\[<.+>\\]"
+		fun register(registry: SyntaxRegistry) {
+			registry.register(
+				SyntaxRegistry.EXPRESSION,
+				DefaultSyntaxInfos.Expression.builder(ExprLocations::class.java, Location::class.java)
+					.addPatterns(
+						"(worldedit|fawe) locations (within|from) %location% (to|and) %location%",
+						"(worldedit|fawe) locations (within|from) %location% (to|and) %location% (where|that match) \\[<.+>\\]",
+						"[surface:surface [tolerance %number%] of] (worldedit|fawe) locations in radius %number% around %location%",
+						"[surface:surface [tolerance %number%] of] (worldedit|fawe) locations in radius %number% around %location% (where|that match) \\[<.+>\\]"
+					)
+					.build()
 			)
-			if (!ParserInstance.isRegistered(InputData::class.java))
-				ParserInstance.registerData(InputData::class.java) { InputData(ParserInstance.get()) }
+
+			if (!ParserInstance.isRegistered(InputData::class.java)) {
+				ParserInstance.registerData(InputData::class.java) {
+					InputData(ParserInstance.get())
+				}
+			}
 		}
 	}
 

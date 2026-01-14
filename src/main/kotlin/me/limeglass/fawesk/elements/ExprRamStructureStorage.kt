@@ -7,7 +7,6 @@ import ch.njol.skript.classes.Changer.ChangeMode
 import ch.njol.skript.doc.Description
 import ch.njol.skript.doc.Name
 import ch.njol.skript.lang.Expression
-import ch.njol.skript.lang.ExpressionType
 import ch.njol.skript.lang.Literal
 import ch.njol.skript.lang.SkriptParser.ParseResult
 import ch.njol.skript.lang.parser.ParserInstance
@@ -17,6 +16,8 @@ import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
 import org.bukkit.event.Event
 import org.skriptlang.skript.lang.script.Script
+import org.skriptlang.skript.registration.DefaultSyntaxInfos
+import org.skriptlang.skript.registration.SyntaxRegistry
 import java.util.concurrent.CopyOnWriteArrayList
 
 @Name("RAM Structure Storage")
@@ -28,17 +29,21 @@ import java.util.concurrent.CopyOnWriteArrayList
 )
 class ExprRamStructureStorage : SimpleExpression<Object>() {
 
-    companion object {
-        val table: Table<String, String, MutableList<Object>> = HashBasedTable.create()
+	companion object {
+		fun register(registry: SyntaxRegistry) {
+			ScriptLoader.eventRegistry().register(FaweskScriptUnloadListener())
+			registry.register(
+				SyntaxRegistry.EXPRESSION,
+				DefaultSyntaxInfos.Expression.builder(ExprRamStructureStorage::class.java, Object::class.java)
+					.addPatterns(
+						"[fawesk] [:single] ram [structure] storage %strings% [from script %-*string%]"
+					)
+					.build()
+			)
+		}
 
-        init {
-            ScriptLoader.eventRegistry().register(FaweskScriptUnloadListener())
-            Skript.registerExpression(
-                ExprRamStructureStorage::class.java, Object::class.java, ExpressionType.SIMPLE,
-                "[fawesk] [:single] ram [structure] storage %strings% [from script %-*string%]",
-            )
-        }
-    }
+		val table: Table<String, String, MutableList<Object>> = HashBasedTable.create()
+	}
 
     private class FaweskScriptUnloadListener : ScriptUnloadEvent {
         override fun onUnload(

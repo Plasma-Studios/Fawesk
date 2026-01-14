@@ -19,6 +19,8 @@ import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.regions.CuboidRegion
 import org.bukkit.Location
 import org.bukkit.event.Event
+import org.skriptlang.skript.registration.SyntaxInfo
+import org.skriptlang.skript.registration.SyntaxRegistry
 import java.io.FileOutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -32,12 +34,16 @@ import java.nio.file.Paths
 class EffSaveSchematic : AsyncEffect() {
 
 	companion object {
-		init {
-			Skript.registerEffect(
-				EffSaveSchematic::class.java,
-				"(save|create) schematic %string% from [pos1] %location% [to] [pos2] %location% " +
-					"[using [clipboard] [format] %-clipboardformat/builtinclipboardformat%] " +
-					"[with origin %-location%] [entities:includ[ing|e] entities] [biome:[and] includ[ing|e] biome[s]]"
+		fun register(registry: SyntaxRegistry) {
+			registry.register(
+				SyntaxRegistry.EFFECT,
+				SyntaxInfo.builder(EffSaveSchematic::class.java)
+					.addPattern(
+						"(save|create) schematic %string% from [pos1] %location% [to] [pos2] %location% " +
+							"[using [clipboard] [format] %-clipboardformat/builtinclipboardformat%] " +
+							"[with origin %-location%] [entities:includ[ing|e] entities] [biome:[and] includ[ing|e] biome[s]]"
+					)
+					.build()
 			)
 		}
 	}

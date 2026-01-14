@@ -6,7 +6,6 @@ import ch.njol.skript.doc.Examples
 import ch.njol.skript.expressions.ExprInput
 import ch.njol.skript.lang.Condition
 import ch.njol.skript.lang.Expression
-import ch.njol.skript.lang.ExpressionType
 import ch.njol.skript.lang.InputSource
 import ch.njol.skript.lang.InputSource.InputData
 import ch.njol.skript.lang.SkriptParser.ParseResult
@@ -15,7 +14,6 @@ import ch.njol.skript.lang.util.SimpleExpression
 import ch.njol.skript.util.BlockStateBlock
 import ch.njol.skript.util.Direction
 import ch.njol.util.Kleenean
-import com.fastasyncworldedit.core.FaweAPI
 import com.google.common.collect.Iterators
 import com.sk89q.worldedit.WorldEdit
 import com.sk89q.worldedit.bukkit.BukkitAdapter
@@ -28,6 +26,8 @@ import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.block.data.BlockData
 import org.bukkit.event.Event
+import org.skriptlang.skript.registration.DefaultSyntaxInfos
+import org.skriptlang.skript.registration.SyntaxRegistry
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -40,17 +40,26 @@ import java.util.concurrent.TimeoutException
 class ExprBlocks : SimpleExpression<Block>(), InputSource {
 
 	companion object {
-		init {
-			Skript.registerExpression(ExprBlocks::class.java, Block::class.java, ExpressionType.SIMPLE,
-				"(worldedit|fawe) (blocks|things) (within|from) %location% (to|and) %location%",
-				"(worldedit|fawe) (blocks|things) (within|from) %location% (to|and) %location% (where|that match) \\[<.+>\\]",
-				"[the] (worldedit|fawe) (block|thing)[s] %directions% %locations%",
-				"[the] (worldedit|fawe) (block|thing)[s] %directions% %locations% (where|that match) \\[<.+>\\]",
-				"[the] [surface:surface [tolerance %number%] of] (worldedit|fawe) (block|thing)[s] in radius %number% around %location%",
-				"[the] [surface:surface [tolerance %number%] of] (worldedit|fawe) (block|thing)[s] in radius %number% around %location% (where|that match) \\[<.+>\\]"
+		fun register(registry: SyntaxRegistry) {
+			registry.register(
+				SyntaxRegistry.EXPRESSION,
+				DefaultSyntaxInfos.Expression.builder(ExprBlocks::class.java, Block::class.java)
+					.addPatterns(
+						"(worldedit|fawe) (blocks|things) (within|from) %location% (to|and) %location%",
+						"(worldedit|fawe) (blocks|things) (within|from) %location% (to|and) %location% (where|that match) \\[<.+>\\]",
+						"[the] (worldedit|fawe) (block|thing)[s] %directions% %locations%",
+						"[the] (worldedit|fawe) (block|thing)[s] %directions% %locations% (where|that match) \\[<.+>\\]",
+						"[the] [surface:surface [tolerance %number%] of] (worldedit|fawe) (block|thing)[s] in radius %number% around %location%",
+						"[the] [surface:surface [tolerance %number%] of] (worldedit|fawe) (block|thing)[s] in radius %number% around %location% (where|that match) \\[<.+>\\]"
+					)
+					.build()
 			)
-			if (!ParserInstance.isRegistered(InputData::class.java))
-				ParserInstance.registerData(InputData::class.java) { InputData(ParserInstance.get()) }
+
+			if (!ParserInstance.isRegistered(InputData::class.java)) {
+				ParserInstance.registerData(InputData::class.java) {
+					InputData(ParserInstance.get())
+				}
+			}
 		}
 	}
 

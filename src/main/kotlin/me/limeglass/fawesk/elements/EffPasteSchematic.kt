@@ -14,6 +14,8 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
 import com.sk89q.worldedit.math.BlockVector3
 import org.bukkit.Location
 import org.bukkit.event.Event
+import org.skriptlang.skript.registration.SyntaxInfo
+import org.skriptlang.skript.registration.SyntaxRegistry
 import java.io.FileInputStream
 
 @Examples(
@@ -24,12 +26,16 @@ import java.io.FileInputStream
 class EffPasteSchematic : AsyncEffect() {
 
 	companion object {
-		init {
-			Skript.registerEffect(
-				EffPasteSchematic::class.java,
-				"paste schematic %string% at %location% " +
-					"[using [clipboard] [format] %-clipboardformat/builtinclipboardformat%] " +
-					"[air:exclud[ing|e] air] [entities:exclud[ing|e] entities]"
+		fun register(registry: SyntaxRegistry) {
+			registry.register(
+				SyntaxRegistry.EFFECT,
+				SyntaxInfo.builder(EffPasteSchematic::class.java)
+					.addPattern(
+						"paste schematic %string% at %location% " +
+							"[using [clipboard] [format] %-clipboardformat/builtinclipboardformat%] " +
+							"[air:exclud[ing|e] air] [entities:exclud[ing|e] entities]"
+					)
+					.build()
 			)
 		}
 	}

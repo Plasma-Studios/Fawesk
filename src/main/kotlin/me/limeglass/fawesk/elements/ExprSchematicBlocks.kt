@@ -5,7 +5,6 @@ import ch.njol.skript.doc.Description
 import ch.njol.skript.expressions.ExprInput
 import ch.njol.skript.lang.Condition
 import ch.njol.skript.lang.Expression
-import ch.njol.skript.lang.ExpressionType
 import ch.njol.skript.lang.InputSource
 import ch.njol.skript.lang.InputSource.InputData
 import ch.njol.skript.lang.SkriptParser.ParseResult
@@ -23,6 +22,8 @@ import com.sk89q.worldedit.math.BlockVector3
 import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.event.Event
+import org.skriptlang.skript.registration.DefaultSyntaxInfos
+import org.skriptlang.skript.registration.SyntaxRegistry
 import java.io.FileInputStream
 import java.util.concurrent.CompletableFuture
 
@@ -34,14 +35,22 @@ import java.util.concurrent.CompletableFuture
 class ExprSchematicBlocks : SimpleExpression<Block>(), InputSource {
 
 	companion object {
-		init {
-			Skript.registerExpression(
-				ExprSchematicBlocks::class.java, Block::class.java, ExpressionType.SIMPLE,
-				"[the] (worldedit|fawe) blocks of schematic[s] %strings% [[with] origin %-location%] [using [clipboard] [format] %-clipboardformat/builtinclipboardformat%] (where|that match) \\[<.+>\\]",
-				"[the] (worldedit|fawe) blocks of schematic[s] %strings% [[with] origin %-location%] [using [clipboard] [format] %-clipboardformat/builtinclipboardformat%]",
+		fun register(registry: SyntaxRegistry) {
+			registry.register(
+				SyntaxRegistry.EXPRESSION,
+				DefaultSyntaxInfos.Expression.builder(ExprSchematicBlocks::class.java, Block::class.java)
+					.addPatterns(
+						"[the] (worldedit|fawe) blocks of schematic[s] %strings% [[with] origin %-location%] [using [clipboard] [format] %-clipboardformat/builtinclipboardformat%] (where|that match) \\[<.+>\\]",
+						"[the] (worldedit|fawe) blocks of schematic[s] %strings% [[with] origin %-location%] [using [clipboard] [format] %-clipboardformat/builtinclipboardformat%]",
+					)
+					.build()
 			)
-			if (!ParserInstance.isRegistered(InputData::class.java))
-				ParserInstance.registerData(InputData::class.java) { InputData(ParserInstance.get()) }
+
+			if (!ParserInstance.isRegistered(InputData::class.java)) {
+				ParserInstance.registerData(InputData::class.java) {
+					InputData(ParserInstance.get())
+				}
+			}
 		}
 	}
 
